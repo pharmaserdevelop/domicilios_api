@@ -1,0 +1,37 @@
+import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+
+export class CreateAddressesDto {
+  @IsNotEmpty()
+  @IsString()
+  user_id: string;
+
+  @IsOptional()
+  @IsString()
+  origin?: string;
+
+  @IsNotEmpty()
+  @IsString()
+  state_name: string;
+
+  @IsBoolean()
+  mutual_agreement: boolean;
+
+  @IsNotEmpty()
+  @IsString()
+  zone_id: string;
+
+  @IsOptional()
+  @IsString()
+  image_url?: string;
+
+  @IsOptional()
+  @IsString()
+  signature?: string;
+
+  @IsBoolean()
+  finished_state?: boolean;
+
+  @IsOptional()
+  @IsString()
+  delivery_person_id?: string;
+}
