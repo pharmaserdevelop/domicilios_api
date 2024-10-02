@@ -8,11 +8,11 @@ import { Repository } from 'typeorm';
 export class StatusAddressesSeed {
   constructor(
     @InjectRepository(StatusAddresses)
-    private readonly estadoAddressesRepository: Repository<StatusAddresses>,
+    private readonly statusAddressesRepository: Repository<StatusAddresses>,
   ) {}
 
   async run() {
-    await this.estadoAddressesRepository.delete({});
+    await this.statusAddressesRepository.delete({});
     const status = [
       {
         state: 'entregado',
@@ -28,7 +28,7 @@ export class StatusAddressesSeed {
       },
     ];
 
-    await this.estadoAddressesRepository.save(status);
+    await this.statusAddressesRepository.save(status);
 
     return {
       message:

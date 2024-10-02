@@ -1,14 +1,15 @@
 import { Module } from '@nestjs/common';
-import { ZonasService } from './zones.service';
-import { ZonasController } from './zones.controller';
+import { ZonesService } from './zones.service';
+import { ZonesController } from './zones.controller';
 import { ConfigModule } from '@nestjs/config';
-import { Zona } from './entities/zone.entity';
+import { Zone } from './entities/zone.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ValidationModule } from 'src/validation/validation.module';
 
 @Module({
-  imports: [ConfigModule, TypeOrmModule.forFeature([Zona]), ValidationModule],
-  controllers: [ZonasController],
-  providers: [ZonasService],
+  imports: [ConfigModule, TypeOrmModule.forFeature([Zone]), ValidationModule],
+  controllers: [ZonesController],
+  providers: [ZonesService],
+  exports: [ZonesService],
 })
-export class ZonasModule {}
+export class ZonesModule {}

@@ -1,13 +1,13 @@
 import { Controller, Post, Body } from '@nestjs/common';
-import { ZonasService } from './zones.service';
+import { ZonesService } from './zones.service';
 import { CreateZoneDto } from './dto/create-zone.dto';
 
-@Controller('zonas')
-export class ZonasController {
-  constructor(private readonly zonasService: ZonasService) {}
+@Controller('zones')
+export class ZonesController {
+  constructor(private readonly zonesService: ZonesService) {}
 
   @Post('create')
-  create(@Body() createZonaDto: CreateZoneDto) {
-    return this.zonasService.createZona(createZonaDto);
+  create(@Body() createZoneDto: CreateZoneDto) {
+    return this.zonesService.createZone(createZoneDto);
   }
 }

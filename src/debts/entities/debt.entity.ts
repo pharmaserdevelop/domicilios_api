@@ -8,7 +8,7 @@ import { StatusAddresses } from 'src/status-addresses/entities/status-addresses.
 @Entity('debts')
 export class Debt {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column({ type: 'datetime' })
   date: Date;

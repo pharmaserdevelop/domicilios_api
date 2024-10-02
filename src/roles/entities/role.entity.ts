@@ -4,7 +4,7 @@ import { Column, Entity, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
 @Entity('roles')
 export class Role {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column('varchar', { length: 255, unique: true })
   name: string;

@@ -1,13 +1,19 @@
-import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateAddressesDto {
   @IsNotEmpty()
   @IsString()
   user_id: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
-  origin?: string;
+  origin: string;
 
   @IsNotEmpty()
   @IsString()
@@ -34,4 +40,8 @@ export class CreateAddressesDto {
   @IsOptional()
   @IsString()
   delivery_person_id?: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  value: number;
 }

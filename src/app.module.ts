@@ -3,9 +3,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 
-import { ZonasModule } from './zones/zones.module';
+import { ZonesModule } from './zones/zones.module';
 import { AddressessModule } from './addresses/addresses.module';
-import { RepartoModule } from './delivery/delivery.module';
 import { RolesModule } from './roles/roles.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -14,6 +13,7 @@ import { SeedModule } from './seed/seed.module';
 import { ValidationModule } from './validation/validation.module';
 import { DebtsModule } from './debts/debts.module';
 import { StatusAddressesModule } from './status-addresses/status-addresses.module';
+import { StateHistoryModule } from './state_history/state_history.module';
 
 @Module({
   imports: [
@@ -31,13 +31,13 @@ import { StatusAddressesModule } from './status-addresses/status-addresses.modul
     RolesModule,
     UsersModule,
     StatusAddressesModule,
-    ZonasModule,
+    ZonesModule,
     AddressessModule,
-    RepartoModule,
     DebtsModule,
     AuthModule,
     SeedModule,
     ValidationModule,
+    StateHistoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

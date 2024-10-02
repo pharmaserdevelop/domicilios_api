@@ -1,12 +1,18 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  CreateDateColumn,
+} from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { StatusAddresses } from '../../status-addresses/entities/status-addresses.entity';
-import { Zona } from '../../zones/entities/zone.entity';
+import { Zone } from '../../zones/entities/zone.entity';
 
 @Entity('addresses')
 export class Addresses {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @ManyToOne(() => User)
   user: User;
@@ -20,8 +26,14 @@ export class Addresses {
   @Column({ type: 'boolean', default: false })
   mutualAgreement: boolean;
 
-  @ManyToOne(() => Zona)
-  zone: Zona;
+  @Column()
+  value: number;
+
+  @ManyToOne(() => Zone)
+  zone: Zone;
+
+  @CreateDateColumn({ type: 'datetime' })
+  date: Date;
 
   @Column({ type: 'varchar', length: 255, default: '0' })
   imageUrl: string;
