@@ -4,10 +4,12 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   CreateDateColumn,
+  OneToMany,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { StatusAddresses } from '../../status-addresses/entities/status-addresses.entity';
 import { Zone } from '../../zones/entities/zone.entity';
+import { DeliveryReceivers } from 'src/delivery_receiver/entities/delivery_receiver.entity';
 
 @Entity('addresses')
 export class Addresses {
@@ -46,4 +48,7 @@ export class Addresses {
 
   @ManyToOne(() => User)
   deliveryPerson: User;
+
+  @OneToMany(() => DeliveryReceivers, (receiver) => receiver.address)
+  deliveryReceivers: DeliveryReceivers[];
 }

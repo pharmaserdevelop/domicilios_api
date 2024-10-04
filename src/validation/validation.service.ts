@@ -13,7 +13,7 @@ export class ValidationService {
   validateMinLength(value: string, minLength: number, fieldName: string): void {
     if (value.length < minLength) {
       throw new BadRequestException(
-        `${fieldName} debe tener al menos ${minLength} caracteres.`,
+        `${fieldName} must have at least ${minLength} characters.`,
       );
     }
   }
@@ -25,7 +25,7 @@ export class ValidationService {
   ): Promise<void> {
     const entity = await repository.findOne({ where: { id } });
     if (!entity) {
-      throw new NotFoundException(`${entityName} con id ${id} no encontrado.`);
+      throw new NotFoundException(`${entityName} con id ${id} not found.`);
     }
   }
 
@@ -38,7 +38,7 @@ export class ValidationService {
     const exists = await repository.findOne({ where: { [fieldName]: value } });
     if (exists) {
       throw new BadRequestException(
-        `${entityName} con ${fieldName} "${value}" ya existe.`,
+        `${entityName} with ${fieldName} "${value}"  exist.`,
       );
     }
   }

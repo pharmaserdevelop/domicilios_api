@@ -14,6 +14,7 @@ import { ValidationModule } from './validation/validation.module';
 import { DebtsModule } from './debts/debts.module';
 import { StatusAddressesModule } from './status-addresses/status-addresses.module';
 import { StateHistoryModule } from './state_history/state_history.module';
+import { DeliveryReceiverModule } from './delivery_receiver/delivery_receiver.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { StateHistoryModule } from './state_history/state_history.module';
     SeedModule,
     ValidationModule,
     StateHistoryModule,
+    DeliveryReceiverModule,
   ],
   controllers: [AppController],
   providers: [AppService],
