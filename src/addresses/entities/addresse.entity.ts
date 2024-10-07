@@ -31,6 +31,18 @@ export class Addresses {
   @Column()
   value: number;
 
+  @Column({ type: 'varchar', default: '0' })
+  affiliateDocument: string;
+
+  @Column({ type: 'varchar', default: '0' })
+  affiliateName: string;
+
+  @Column({ type: 'varchar', default: '0' })
+  affiliatePhone: string;
+
+  @Column()
+  addresses: string;
+
   @ManyToOne(() => Zone)
   zone: Zone;
 

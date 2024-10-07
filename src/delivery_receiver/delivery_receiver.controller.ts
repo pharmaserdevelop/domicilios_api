@@ -32,7 +32,7 @@ export class DeliveryReceiverController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.deliveryReceiverService.findOne(+id);
+    return this.deliveryReceiverService.findOne(id);
   }
 
   @Patch(':id')

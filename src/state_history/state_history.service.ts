@@ -1,8 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { StateHistory } from './entities/state_history.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Addresses } from 'src/addresses/entities/addresse.entity';
+import { CreateStateHistoryDto } from './dto/create-state_history.dto';
 
 @Injectable()
 export class StateHistoryService {
@@ -40,5 +45,25 @@ export class StateHistoryService {
         date: 'DESC',
       },
     });
+  }
+
+  async createStateHistoryAddresses(
+    createStateHistoryDto: CreateStateHistoryDto,
+  ): Promise<StateHistory> {
+    try {
+      const { addressesId, stateId } = createStateHistoryDto;
+
+      const historyState = this.stateHistoryRepository.create({
+        addresses: { id: addressesId },
+        state: { id: stateId },
+      });
+
+      return await this.stateHistoryRepository.save(historyState);
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Error al creating  history of state',
+        error,
+      );
+    }
   }
 }

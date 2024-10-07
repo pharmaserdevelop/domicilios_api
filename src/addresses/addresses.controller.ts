@@ -19,7 +19,7 @@ export class AddressessController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.addressesService.findOne(+id);
+    return this.addressesService.findOne(id);
   }
 
   @Put(':id/state')

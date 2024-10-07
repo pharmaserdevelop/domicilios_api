@@ -15,6 +15,9 @@ export class StatusAddressesSeed {
     await this.statusAddressesRepository.delete({});
     const status = [
       {
+        state: 'en preparacion',
+      },
+      {
         state: 'entregado',
       },
       {

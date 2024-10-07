@@ -15,6 +15,8 @@ import { DebtsModule } from './debts/debts.module';
 import { StatusAddressesModule } from './status-addresses/status-addresses.module';
 import { StateHistoryModule } from './state_history/state_history.module';
 import { DeliveryReceiverModule } from './delivery_receiver/delivery_receiver.module';
+import { StatusDebtsModule } from './status-debts/status-debts.module';
+import { StateHistoryDebtsModule } from './state_history_debts/state_history_debts.module';
 
 @Module({
   imports: [
@@ -40,6 +42,8 @@ import { DeliveryReceiverModule } from './delivery_receiver/delivery_receiver.mo
     ValidationModule,
     StateHistoryModule,
     DeliveryReceiverModule,
+    StatusDebtsModule,
+    StateHistoryDebtsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

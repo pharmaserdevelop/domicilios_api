@@ -5,6 +5,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
+import { Column } from 'typeorm';
 
 export class CreateAddressesDto {
   @IsNotEmpty()
@@ -15,9 +16,9 @@ export class CreateAddressesDto {
   @IsString()
   origin: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  state_name: string;
+  state_name?: string;
 
   @IsBoolean()
   mutual_agreement: boolean;
@@ -34,12 +35,28 @@ export class CreateAddressesDto {
   @IsString()
   signature?: string;
 
-  @IsBoolean()
-  finished_state?: boolean;
+  @IsOptional()
+  @IsString()
+  affiliateDocument?: string = '0';
 
   @IsOptional()
   @IsString()
-  delivery_person_id?: string;
+  affiliateName?: string = '0';
+
+  @IsOptional()
+  @IsString()
+  affiliatePhone?: string = '0';
+
+  @Column()
+  @IsNotEmpty()
+  addresses: string;
+
+  @IsBoolean()
+  finished_state?: boolean;
+
+  @IsNotEmpty()
+  @IsString()
+  delivery_person_id: string;
 
   @IsNotEmpty()
   @IsNumber()

@@ -18,6 +18,9 @@ export class DeliveryReceivers {
   @Column({ type: 'varchar', length: 255 })
   receiverName: string;
 
+  @Column({ type: 'varchar', length: 255 })
+  document: string;
+
   @Column({ type: 'varchar', length: 50, nullable: true })
   receiverPhone?: string;
 

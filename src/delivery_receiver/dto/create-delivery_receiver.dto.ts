@@ -7,6 +7,9 @@ export class CreateDeliveryReceiverDto {
   @IsNotEmpty()
   receiverName: string;
 
+  @IsNotEmpty()
+  document: string;
+
   @IsOptional()
   receiverPhone?: string;
 }

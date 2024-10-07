@@ -10,7 +10,6 @@ import {
 import { DebtsService } from './debts.service';
 import { CreateDebtDto } from './dto/create-debt.dto';
 import { UpdateDebtDto } from './dto/update-debt.dto';
-import { Auth } from 'src/auth/decorators/auth.decorater';
 
 @Controller('debts')
 export class DebtsController {
@@ -22,19 +21,18 @@ export class DebtsController {
   }
 
   @Get()
-  @Auth('domiciliario')
   findAll() {
-    return this.debtsService.findAll();
+    return this.debtsService.findAllDebts();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.debtsService.findOne(+id);
+    return this.debtsService.findDebtById(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateDebtDto: UpdateDebtDto) {
-    return this.debtsService.update(+id, updateDebtDto);
+    return this.debtsService.updateDebtsState(id, updateDebtDto);
   }
 
   @Delete(':id')
