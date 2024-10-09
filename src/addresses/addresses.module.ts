@@ -14,6 +14,8 @@ import { Debt } from 'src/debts/entities/debt.entity';
 import { DebtsModule } from 'src/debts/debts.module';
 import { StateHistoryModule } from 'src/state_history/state_history.module';
 import { DeliveryReceiverModule } from 'src/delivery_receiver/delivery_receiver.module';
+import { Origin } from 'src/origin/entities/origin.entity';
+import { OriginModule } from 'src/origin/origin.module';
 
 @Module({
   imports: [
@@ -25,12 +27,14 @@ import { DeliveryReceiverModule } from 'src/delivery_receiver/delivery_receiver.
       Zone,
       User,
       Debt,
+      Origin,
     ]),
     StatusAddressesModule,
     ZonesModule,
     StateHistoryModule,
     forwardRef(() => DebtsModule),
     forwardRef(() => DeliveryReceiverModule),
+    OriginModule,
   ],
   controllers: [AddressessController],
   providers: [AddressessService],

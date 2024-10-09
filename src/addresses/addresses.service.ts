@@ -13,6 +13,7 @@ import { Zone } from 'src/zones/entities/zone.entity';
 import { User } from 'src/users/entities/user.entity';
 import { DebtsService } from 'src/debts/debts.service';
 import { StateHistoryService } from 'src/state_history/state_history.service';
+import { OriginService } from 'src/origin/origin.service';
 
 @Injectable()
 export class AddressessService {
@@ -27,19 +28,27 @@ export class AddressessService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly debtService: DebtsService,
+    private readonly originService: OriginService,
   ) {}
   async create(createAddressesDto: CreateAddressesDto): Promise<Addresses> {
-    const { state_name, zone_id, delivery_person_id, user_id, value } =
-      createAddressesDto;
+    const {
+      state_name = 'en preparacion',
+      zone_id,
+      delivery_person_id,
+      user_id,
+      value,
+      origin_id,
+    } = createAddressesDto;
 
     try {
-      const [state, zone, deliveryPerson, user] = await Promise.all([
+      const [state, zone, deliveryPerson, user, origin] = await Promise.all([
         this.statusAddressesRepository.findOne({
-          where: { state: 'en preparacion' },
+          where: { state: state_name },
         }),
         this.zoneRepository.findOne({ where: { id: zone_id } }),
         this.userRepository.findOne({ where: { id: delivery_person_id } }),
         this.userRepository.findOne({ where: { id: user_id } }),
+        this.originService.findOne(origin_id),
       ]);
 
       if (!state)
@@ -54,6 +63,8 @@ export class AddressessService {
         );
       if (!user)
         throw new NotFoundException(`User with id "${user_id}" not found`);
+      if (!origin)
+        throw new NotFoundException(`Origin with id "${origin_id}" not found`);
 
       const address = this.addressesRepository.create({
         ...createAddressesDto,
@@ -62,6 +73,7 @@ export class AddressessService {
         user,
         deliveryPerson,
         value: value,
+        origin,
       });
 
       const savedAddress = await this.addressesRepository.save(address);

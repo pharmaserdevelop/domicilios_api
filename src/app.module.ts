@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 
 import { ZonesModule } from './zones/zones.module';
@@ -17,6 +15,7 @@ import { StateHistoryModule } from './state_history/state_history.module';
 import { DeliveryReceiverModule } from './delivery_receiver/delivery_receiver.module';
 import { StatusDebtsModule } from './status-debts/status-debts.module';
 import { StateHistoryDebtsModule } from './state_history_debts/state_history_debts.module';
+import { OriginModule } from './origin/origin.module';
 
 @Module({
   imports: [
@@ -44,8 +43,9 @@ import { StateHistoryDebtsModule } from './state_history_debts/state_history_deb
     DeliveryReceiverModule,
     StatusDebtsModule,
     StateHistoryDebtsModule,
+    OriginModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

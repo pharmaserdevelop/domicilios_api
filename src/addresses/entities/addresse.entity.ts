@@ -10,6 +10,7 @@ import { User } from '../../users/entities/user.entity';
 import { StatusAddresses } from '../../status-addresses/entities/status-addresses.entity';
 import { Zone } from '../../zones/entities/zone.entity';
 import { DeliveryReceivers } from 'src/delivery_receiver/entities/delivery_receiver.entity';
+import { Origin } from 'src/origin/entities/origin.entity';
 
 @Entity('addresses')
 export class Addresses {
@@ -18,9 +19,6 @@ export class Addresses {
 
   @ManyToOne(() => User)
   user: User;
-
-  @Column({ type: 'varchar', length: 255 })
-  origin: string;
 
   @ManyToOne(() => StatusAddresses)
   state: StatusAddresses;
@@ -63,4 +61,7 @@ export class Addresses {
 
   @OneToMany(() => DeliveryReceivers, (receiver) => receiver.address)
   deliveryReceivers: DeliveryReceivers[];
+
+  @ManyToOne(() => Origin, (origin) => origin.addresses)
+  origin: Origin;
 }
