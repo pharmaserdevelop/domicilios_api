@@ -166,4 +166,16 @@ export class AddressessService {
       stateId,
     });
   }
+
+  async updateSignature(addressId: string, filename: string) {
+    const address = await this.addressesRepository.findOne({
+      where: { id: addressId },
+    });
+    if (address) {
+      address.signature = filename;
+      await this.addressesRepository.save(address);
+    } else {
+      throw new Error('Address not found');
+    }
+  }
 }

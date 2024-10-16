@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateZoneDto } from './dto/create-zone.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Zone } from './entities/zone.entity';
@@ -29,5 +33,25 @@ export class ZonesService {
     } catch (error) {
       this.validationService.handleDBrrors(error);
     }
+  }
+
+  async findOne(zonesId: string) {
+    const addresses = this.findZonesById(zonesId);
+    return addresses;
+  }
+  private async findZonesById(zonesId: string): Promise<Zone> {
+    const zone = await this.zoneRepository.findOne({
+      where: { id: zonesId },
+    });
+
+    if (!zone) {
+      throw new NotFoundException(`Addresses with ID ${zonesId} not found`);
+    }
+
+    return zone;
+  }
+
+  findAll() {
+    return this.zoneRepository.find();
   }
 }
