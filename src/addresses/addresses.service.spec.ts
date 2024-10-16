@@ -6,12 +6,12 @@ import { Zone } from 'src/zones/entities/zone.entity';
 import { User } from 'src/users/entities/user.entity';
 import { DebtsService } from 'src/debts/debts.service';
 import { StateHistoryService } from 'src/state_history/state_history.service';
+import { OriginService } from 'src/origin/origin.service'; 
 import {
   NotFoundException,
   InternalServerErrorException,
 } from '@nestjs/common';
 import { AddressessService } from './addresses.service';
-import { resolve } from 'dns';
 
 describe('AddressessService', () => {
   let service: AddressessService;
@@ -21,6 +21,7 @@ describe('AddressessService', () => {
   let userRepository;
   let debtService;
   let stateHistoryService;
+  let originService;
 
   const mockAddress = {
     id: '1',
@@ -40,6 +41,7 @@ describe('AddressessService', () => {
     signature: '0',
     finishedState: false,
     deliveryReceivers: [],
+    origin_id: 'origin-id'
   };
 
   const mockCreateAddressesDto = {
@@ -48,12 +50,13 @@ describe('AddressessService', () => {
     delivery_person_id: '1',
     user_id: '1',
     value: 100,
+    origin_id: 'origin-id', 
     origin: 'Some Origin',
     mutual_agreement: false,
     affiliateDocument: '0',
     affiliateName: '0',
     affiliatePhone: '0',
-    addresses: '123 Main St',
+    addresses: '123 Main St'
   };
 
   beforeEach(async () => {
@@ -117,6 +120,12 @@ describe('AddressessService', () => {
             createStateHistoryAddresses: jest.fn().mockResolvedValue(true),
           },
         },
+        {
+          provide: OriginService,
+          useValue: {
+            findOne: jest.fn().mockResolvedValue({ id: 'origin-id' }),
+          },
+        },
       ],
     }).compile();
 
@@ -127,6 +136,7 @@ describe('AddressessService', () => {
     userRepository = module.get(getRepositoryToken(User));
     debtService = module.get(DebtsService);
     stateHistoryService = module.get(StateHistoryService);
+    originService = module.get(OriginService);
   });
 
   it('should be defined', () => {
@@ -144,6 +154,7 @@ describe('AddressessService', () => {
         state: { id: 'state-id', state: 'en preparacion' },
         user: { id: mockCreateAddressesDto.user_id },
         deliveryPerson: { id: mockCreateAddressesDto.delivery_person_id },
+        origin : { id : mockCreateAddressesDto.origin_id },
       });
       expect(addressesRepository.save).toHaveBeenCalledWith(mockAddress);
       expect(debtService.create).toHaveBeenCalled();
@@ -170,7 +181,7 @@ describe('AddressessService', () => {
     });
 
     it('should throw NotFoundException if delivery person is not found', async () => {
-      userRepository.findOne.mockResolvedValueOnce(null); // Simula que no se encuentra el repartidor
+      userRepository.findOne.mockResolvedValueOnce(null);
       await expect(service.create(mockCreateAddressesDto)).rejects.toThrow(
         NotFoundException,
       );
@@ -180,13 +191,21 @@ describe('AddressessService', () => {
     });
 
     it('should throw NotFoundException if user is not found', async () => {
-      userRepository.findOne.mockResolvedValueOnce(null); // Simula que no se encuentra el usuario
+      userRepository.findOne.mockResolvedValueOnce(null);
       await expect(service.create(mockCreateAddressesDto)).rejects.toThrow(
         NotFoundException,
       );
       expect(userRepository.findOne).toHaveBeenCalledWith({
         where: { id: mockCreateAddressesDto.user_id },
       });
+    });
+
+    it('should throw NotFoundException if origin is not found', async () => {
+      originService.findOne.mockResolvedValueOnce(null);
+      await expect(service.create(mockCreateAddressesDto)).rejects.toThrow(
+        NotFoundException,
+      );
+      expect(originService.findOne).toHaveBeenCalledWith(mockCreateAddressesDto.origin_id);
     });
 
     it('should throw InternalServerErrorException on unexpected errors', async () => {
