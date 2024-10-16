@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsArray,
   IsEmail,
+  IsNotEmpty,
   IsOptional,
   IsString,
   Matches,
@@ -39,6 +40,11 @@ export class CreateUserDto {
   @IsString()
   @MinLength(1)
   fullName: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(1)
+  document: string;
 
   @ApiProperty({
     description: 'An optional array of roles assigned to the user.',

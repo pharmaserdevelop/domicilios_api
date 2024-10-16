@@ -23,6 +23,9 @@ export class User {
   @Column('text')
   fullName: string;
 
+  @Column('text')
+  document: string;
+
   @Column('boolean', { default: true })
   isActive: boolean;
 

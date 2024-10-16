@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -21,12 +22,14 @@ export class UsersService {
     @InjectRepository(Role)
     private readonly roleRepository: Repository<Role>,
   ) {}
-  async create(createUserDto: CreateUserDto, __role?: string) {
+  async create(createUserDto: CreateUserDto, role?: string) {
     try {
       const { password, roles, ...userData } = createUserDto;
 
       const userRoles = await this.roleRepository.find({
-        where: { name: In(roles && roles.length > 0 ? roles : ['user']) },
+        where: {
+          name: In(roles && roles.length > 0 ? roles : ['domiciliario']),
+        },
       });
 
       const user = this.userRepository.create({
@@ -38,8 +41,11 @@ export class UsersService {
       await this.userRepository.save(user);
       delete user.password;
 
-      // return { ...user, token: this.getJwtToken({ id: user.id, email: user.email }) };\
-      return { token: this.getJwtToken({ id: user.id, email: user.email }) };
+      //  return {
+      //    ...user,
+      //    token: this.getJwtToken({ id: user.id, email: user.email }),
+      //  };
+      return { token: this.getJwtToken({ id: user.id }) };
     } catch (error) {
       this.handleDBrrors(error);
     }
@@ -56,5 +62,41 @@ export class UsersService {
   private getJwtToken(payload: JwtPayload) {
     const token = this.jwtService.sign(payload);
     return token;
+  }
+
+  findAll() {
+    return this.userRepository.find();
+  }
+
+  async findAllUsersDelivery() {
+    try {
+      const users = await this.userRepository.find({
+        relations: ['roles'],
+        where: {
+          roles: { name: 'domiciliario' },
+        },
+      });
+
+      return users;
+    } catch (error) {
+      this.handleDBrrors(error);
+    }
+  }
+
+  async findOne(userId: string) {
+    const user = this.findAddressById(userId);
+    return user;
+  }
+
+  private async findAddressById(userId: string): Promise<User> {
+    const addresses = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+
+    if (!addresses) {
+      throw new NotFoundException(`Addresses with ID ${userId} not found`);
+    }
+
+    return addresses;
   }
 }

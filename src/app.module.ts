@@ -16,6 +16,8 @@ import { DeliveryReceiverModule } from './delivery_receiver/delivery_receiver.mo
 import { StatusDebtsModule } from './status-debts/status-debts.module';
 import { StateHistoryDebtsModule } from './state_history_debts/state_history_debts.module';
 import { OriginModule } from './origin/origin.module';
+import { FilesModule } from './files/files.module';
+import { RequestModule } from './request/request.module';
 
 @Module({
   imports: [
@@ -44,6 +46,8 @@ import { OriginModule } from './origin/origin.module';
     StatusDebtsModule,
     StateHistoryDebtsModule,
     OriginModule,
+    FilesModule,
+    RequestModule,
   ],
   controllers: [],
   providers: [],

@@ -11,6 +11,14 @@ async function bootstrap() {
     .setVersion('1.0')
     .addTag('addresses')
     .build();
+  app.enableCors({
+    origin: [process.env.ORIGIN_CORS],
+
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+    credentials: true,
+  });
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
   await app.listen(3000);
