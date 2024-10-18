@@ -70,7 +70,9 @@ export class DebtsService {
   }
 
   private async fetchAllDebts(): Promise<Debt[]> {
-    return await this.debtRepository.find({ relations: ['address'] });
+    return await this.debtRepository.find({
+      relations: ['address', 'state_debt'],
+    });
   }
 
   async findDebtById(debtId: string): Promise<Debt> {

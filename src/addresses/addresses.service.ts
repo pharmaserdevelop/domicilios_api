@@ -99,7 +99,14 @@ export class AddressessService {
 
   findAll() {
     return this.addressesRepository.find({
-      relations: ['user', 'state', 'deliveryPerson', 'deliveryReceivers'],
+      relations: [
+        'user',
+        'state',
+        'deliveryPerson',
+        'deliveryReceivers',
+        'zone',
+        'origin',
+      ],
     });
   }
 
