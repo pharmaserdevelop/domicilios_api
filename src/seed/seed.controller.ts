@@ -3,6 +3,9 @@ import { RoleSeed } from './seeds/roles.seed';
 import { UserSeed } from './seeds/user.seed';
 import { StatusAddressesSeed } from './seeds/status-addresses.seed';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ZonesSeed } from './seeds/zones.seed';
+import { OriginSeed } from './seeds/origen.seed';
+import { statusDebtSeed } from './seeds/status-debt.seed';
 @ApiTags('seed')
 @Controller('seed')
 export class SeedController {
@@ -10,6 +13,9 @@ export class SeedController {
     private readonly roleSeed: RoleSeed,
     private readonly userSeed: UserSeed,
     private readonly estadosAddressessSeed: StatusAddressesSeed,
+    private readonly zonesSeed: ZonesSeed,
+    private readonly originSeed: OriginSeed,
+    private readonly statusDebtSeed: statusDebtSeed,
   ) {}
 
   @Get('roles')
@@ -40,5 +46,20 @@ export class SeedController {
   })
   async createEstados() {
     return this.estadosAddressessSeed.run();
+  }
+
+  @Get('zones')
+  async createZones() {
+    return this.zonesSeed.run();
+  }
+
+  @Get('origin')
+  async createOrigin() {
+    return this.originSeed.run();
+  }
+
+  @Get('status-debt')
+  async createStatusDebt() {
+    return this.statusDebtSeed.run();
   }
 }

@@ -18,6 +18,7 @@ import { StateHistoryDebtsModule } from './state_history_debts/state_history_deb
 import { OriginModule } from './origin/origin.module';
 import { FilesModule } from './files/files.module';
 import { RequestModule } from './request/request.module';
+import { PaymentSupportModule } from './payment-support/payment-support.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { RequestModule } from './request/request.module';
     OriginModule,
     FilesModule,
     RequestModule,
+    PaymentSupportModule,
   ],
   controllers: [],
   providers: [],

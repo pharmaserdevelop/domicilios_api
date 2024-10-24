@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -27,7 +28,12 @@ export class DebtsService {
     private readonly stateHistoryDebtService: StateHistoryDebtsService,
   ) {}
   async create(createDebtDto: CreateDebtDto): Promise<Debt> {
-    const { deliveryPersonId, state_debt, addressId, amount } = createDebtDto;
+    const {
+      deliveryPersonId,
+      state_debt = 'pendiente',
+      addressId,
+      amount,
+    } = createDebtDto;
 
     const deliveryPerson = await this.userRepository.findOne({
       where: { id: deliveryPersonId },
@@ -71,7 +77,7 @@ export class DebtsService {
 
   private async fetchAllDebts(): Promise<Debt[]> {
     return await this.debtRepository.find({
-      relations: ['address', 'state_debt'],
+      relations: ['address', 'address.state', 'state_debt'],
     });
   }
 
@@ -92,7 +98,7 @@ export class DebtsService {
   private async fetchDebtWithRelations(debtId: string): Promise<Debt | null> {
     return await this.debtRepository.findOne({
       where: { id: debtId },
-      relations: ['address'],
+      relations: ['address', 'address.state'],
     });
   }
 
@@ -115,8 +121,16 @@ export class DebtsService {
   async updateDebtsState(debtId: string, updateDebtDto: UpdateDebtDto) {
     try {
       const debt = await this.findDebtById(debtId);
+      if (!debt) {
+        throw new NotFoundException(`Deuda con ID "${debtId}" no encontrada.`);
+      }
 
       const newState = await this.findStateDebtByName(updateDebtDto.state_debt);
+      if (!newState) {
+        throw new BadRequestException(
+          `El estado "${updateDebtDto.state_debt}" no existe.`,
+        );
+      }
 
       debt.state_debt = newState;
       await this.debtRepository.save(debt);
@@ -145,6 +159,25 @@ export class DebtsService {
     }
 
     return newState;
+  }
+
+  async findDebtsByDeliveryPersonId(deliveryPersonId: string): Promise<Debt[]> {
+    try {
+      const debts = await this.debtRepository.find({
+        where: { deliveryPerson: { id: deliveryPersonId } },
+        relations: ['address', 'address.state', 'state_debt'],
+      });
+
+      if (!debts.length) {
+        throw new NotFoundException(
+          `No debts found for delivery person with id "${deliveryPersonId}"`,
+        );
+      }
+
+      return debts;
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
   remove(id: number) {

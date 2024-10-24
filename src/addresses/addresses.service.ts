@@ -185,4 +185,16 @@ export class AddressessService {
       throw new Error('Address not found');
     }
   }
+
+  async updateSupport(addressId: string, filename: string) {
+    const address = await this.addressesRepository.findOne({
+      where: { id: addressId },
+    });
+    if (address) {
+      address.imageUrl = filename;
+      await this.addressesRepository.save(address);
+    } else {
+      throw new Error('Address not found');
+    }
+  }
 }

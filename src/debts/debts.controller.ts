@@ -74,4 +74,16 @@ export class DebtsController {
   remove(@Param('id') id: string) {
     return this.debtsService.remove(+id);
   }
+
+  @Get('findDelivery/:id')
+  @ApiOperation({ summary: 'Retrieve a debt by ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'The found debt.',
+    type: CreateDebtDto,
+  })
+  @ApiResponse({ status: 404, description: 'Debt not found.' })
+  findDelivery(@Param('id') id: string) {
+    return this.debtsService.findDebtsByDeliveryPersonId(id);
+  }
 }

@@ -35,6 +35,7 @@ export class UserSeed {
         fullName: 'Admin User',
         isActive: true,
         roles: [adminRole],
+        document: '1',
       },
       {
         email: 'domiciliario@gmail.com',
@@ -42,6 +43,7 @@ export class UserSeed {
         fullName: 'Domiciliario User',
         isActive: true,
         roles: [deliveryRole],
+        document: '1',
       },
     ];
 
