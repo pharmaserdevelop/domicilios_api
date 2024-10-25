@@ -1,5 +1,6 @@
 import { Address } from 'cluster';
 import { Addresses } from 'src/addresses/entities/addresse.entity';
+import { UserOrigin } from 'src/user-origin/entities/user-origin.entity';
 import {
   Column,
   CreateDateColumn,
@@ -21,4 +22,7 @@ export class Origin {
 
   @OneToMany(() => Addresses, (addresses) => addresses.origin)
   addresses: Address[];
+
+  @OneToMany(() => UserOrigin, (userOrigin) => userOrigin.origin)
+  userOrigins: UserOrigin[];
 }

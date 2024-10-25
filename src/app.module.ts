@@ -19,6 +19,7 @@ import { OriginModule } from './origin/origin.module';
 import { FilesModule } from './files/files.module';
 import { RequestModule } from './request/request.module';
 import { PaymentSupportModule } from './payment-support/payment-support.module';
+import { UserOriginModule } from './user-origin/user-origin.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { PaymentSupportModule } from './payment-support/payment-support.module';
       password: process.env.DB_PASSWORD,
       entities: [`${__dirname}/**/*.entity{.ts,.js}`],
       synchronize: true,
+      logging: ['query', 'error'],
     }),
     RolesModule,
     UsersModule,
@@ -50,6 +52,7 @@ import { PaymentSupportModule } from './payment-support/payment-support.module';
     FilesModule,
     RequestModule,
     PaymentSupportModule,
+    UserOriginModule,
   ],
   controllers: [],
   providers: [],

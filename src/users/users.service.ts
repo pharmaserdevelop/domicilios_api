@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  Get,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -9,9 +10,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Role } from 'src/roles/entities/role.entity';
 import { JwtService } from '@nestjs/jwt';
-import { In, Repository } from 'typeorm';
+import { createQueryBuilder, In, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { JwtPayload } from 'src/auth/interfaces/jwt-payload.interface';
+import { OriginService } from 'src/origin/origin.service';
+import { UserOrigin } from 'src/user-origin/entities/user-origin.entity';
+import { find } from 'rxjs';
+import { Origin } from 'src/origin/entities/origin.entity';
+import { log } from 'console';
 
 @Injectable()
 export class UsersService {
@@ -21,6 +27,11 @@ export class UsersService {
     private readonly jwtService: JwtService,
     @InjectRepository(Role)
     private readonly roleRepository: Repository<Role>,
+    private readonly originService: OriginService,
+    @InjectRepository(UserOrigin)
+    private readonly userOriginRepository: Repository<UserOrigin>,
+    @InjectRepository(Origin)
+    private originRepository: Repository<Origin>,
   ) {}
   async create(createUserDto: CreateUserDto, role?: string) {
     try {
@@ -98,5 +109,53 @@ export class UsersService {
     }
 
     return addresses;
+  }
+
+  async assignOriginToUser(
+    userId: string,
+    originId: string,
+  ): Promise<UserOrigin> {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    const origin = await this.originService.findOne(originId);
+
+    if (!user || !origin) {
+      throw new Error('User or Origin not found');
+    }
+
+    const userOrigin = new UserOrigin();
+    userOrigin.user = user;
+    userOrigin.origin = origin;
+
+    return this.userOriginRepository.save(userOrigin);
+  }
+
+  async findUsersByOrigin(originId: string): Promise<User[]> {
+    console.log('Checking for origin with ID:', originId);
+
+    const origin = await this.originRepository.findOne({
+      where: { id: originId },
+    });
+
+    if (!origin) {
+      throw new NotFoundException(`Origin with ID ${originId} not found`);
+    }
+
+    try {
+      const users = await this.userRepository
+        .createQueryBuilder('user')
+        .innerJoinAndSelect(
+          UserOrigin,
+          'userOrigin',
+          'user.id = userOrigin.user.id',
+        )
+        .where('userOrigin.origin.id = :originId', { originId })
+        .getMany();
+
+      console.log('Users found:', users);
+      return users;
+    } catch (error) {
+      console.error('Error querying users:', error);
+      throw new InternalServerErrorException('Error querying users');
+    }
   }
 }

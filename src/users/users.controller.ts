@@ -1,8 +1,18 @@
-import { Controller, Post, Body, Get } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  NotFoundException,
+  Param,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Auth } from 'src/auth/decorators/auth.decorater';
+import { User } from './entities/user.entity';
+import { log } from 'console';
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
@@ -40,8 +50,38 @@ export class UsersController {
     return this.usersService.findAllUsersDelivery();
   }
 
-  @Get(':id')
-  async findOneUser(id: string) {
+  @Get('finduser/:id')
+  findOneUser(id: string) {
     return this.usersService.findOne(id);
+  }
+
+  @Post(':userId/assign-origin')
+  async assignOriginToUser(
+    @Param('userId') userId: string,
+    @Body('originId') originId: string,
+  ) {
+    const user = await this.usersService.assignOriginToUser(userId, originId);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return user;
+  }
+
+  @Get('by-origin/:originId')
+  async getUsersByOrigin(@Param('originId') originId: string): Promise<User[]> {
+    try {
+      return await this.usersService.findUsersByOrigin(originId);
+    } catch (error) {
+      console.error('Error in getUsersByOrigin:', error);
+      throw new InternalServerErrorException('Something went wrong');
+    }
+  }
+
+  @Get('new-test')
+  async newTestEndpoint() {
+    console.log('New test endpoint hit');
+    return { message: 'New test successful' };
   }
 }
