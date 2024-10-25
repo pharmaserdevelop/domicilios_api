@@ -15,7 +15,7 @@ import * as bcrypt from 'bcrypt';
 import { JwtPayload } from 'src/auth/interfaces/jwt-payload.interface';
 import { OriginService } from 'src/origin/origin.service';
 import { UserOrigin } from 'src/user-origin/entities/user-origin.entity';
-import { find } from 'rxjs';
+import { find, map } from 'rxjs';
 import { Origin } from 'src/origin/entities/origin.entity';
 import { log } from 'console';
 
@@ -156,6 +156,34 @@ export class UsersService {
     } catch (error) {
       console.error('Error querying users:', error);
       throw new InternalServerErrorException('Error querying users');
+    }
+  }
+
+  async findOriginByUserId(userId: string): Promise<Origin[]> {
+    console.log('Finding origins for user with ID:', userId);
+
+    // Verifica si el usuario existe
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${userId} not found`);
+    }
+
+    try {
+      // Realiza la consulta para obtener los orígenes asociados al usuario
+      const userOrigins = await this.userOriginRepository.find({
+        where: { user: { id: userId } },
+        relations: ['origin'], // Asegúrate de incluir la relación con Origin
+      });
+
+      // Extrae los orígenes de las relaciones
+      const origins = userOrigins.map((userOrigin) => userOrigin.origin);
+
+      console.log('Origins found:', origins);
+      return origins;
+    } catch (error) {
+      console.error('Error querying origins:', error);
+      throw new InternalServerErrorException('Error querying origins');
     }
   }
 }
