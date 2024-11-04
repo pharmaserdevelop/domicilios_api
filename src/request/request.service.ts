@@ -11,6 +11,7 @@ import { UpdateDebtDto } from 'src/debts/dto/update-debt.dto';
 import { PaymentSupport } from 'src/payment-support/entities/payment-support.entity';
 import { Repository } from 'typeorm';
 import { Debt } from 'src/debts/entities/debt.entity';
+import { UpdateAddressesDto } from '../addresses/dto/update-addresses.dto';
 
 @Injectable()
 export class RequestsService {
@@ -21,15 +22,31 @@ export class RequestsService {
     @InjectRepository(PaymentSupport)
     private readonly paymentSupportsRepository: Repository<PaymentSupport>,
   ) {}
-  async handleSignatureUpload(file: Express.Multer.File, addressId: string) {
+  async handleSignatureUpload(
+    file: Express.Multer.File,
+    addressId: string,
+    updateAddressesDto: UpdateAddressesDto,
+  ) {
     const filename = await this.filesService.uploadFile(file, 'Firma');
     await this.addressesService.updateSignature(addressId, filename);
+    await this.addressesService.updateAddressesState(
+      addressId,
+      updateAddressesDto,
+    );
     return { message: 'signature success', filename };
   }
 
-  async handleSupportUpload(file: Express.Multer.File, addressId: string) {
+  async handleSupportUpload(
+    file: Express.Multer.File,
+    addressId: string,
+    updateAddressesDto: UpdateAddressesDto,
+  ) {
     const filename = await this.filesService.uploadFile(file, 'SoporteDom');
     await this.addressesService.updateSupport(addressId, filename);
+    await this.addressesService.updateAddressesState(
+      addressId,
+      updateAddressesDto,
+    );
     return { message: 'support success', filename };
   }
 

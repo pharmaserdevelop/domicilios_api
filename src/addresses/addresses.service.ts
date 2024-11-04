@@ -14,6 +14,7 @@ import { User } from 'src/users/entities/user.entity';
 import { DebtsService } from 'src/debts/debts.service';
 import { StateHistoryService } from 'src/state_history/state_history.service';
 import { OriginService } from 'src/origin/origin.service';
+import { find } from 'rxjs';
 
 @Injectable()
 export class AddressessService {
@@ -196,5 +197,20 @@ export class AddressessService {
     } else {
       throw new Error('Address not found');
     }
+  }
+
+  async findAddressesByUserId(userId: string): Promise<Addresses[]> {
+    const addresses = await this.addressesRepository.find({
+      where: { deliveryPerson: { id: userId } },
+      relations: ['user', 'state', 'zone', 'origin', 'deliveryReceivers'],
+    });
+
+    if (!addresses.length) {
+      throw new NotFoundException(
+        `No addresses found for delivery person with user ID ${userId}`,
+      );
+    }
+
+    return addresses;
   }
 }

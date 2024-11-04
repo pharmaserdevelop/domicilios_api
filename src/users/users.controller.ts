@@ -12,7 +12,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Auth } from 'src/auth/decorators/auth.decorater';
 import { User } from './entities/user.entity';
-import { log } from 'console';
 import { Origin } from 'src/origin/entities/origin.entity';
 @ApiTags('users')
 @Controller('users')
@@ -80,9 +79,9 @@ export class UsersController {
     }
   }
 
-  @Get(':id/origins') // Ruta para obtener los orígenes de un usuario por ID
+  @Get(':id/origins')
   async getOriginsByUserId(@Param('id') userId: string): Promise<Origin[]> {
     console.log('getOriginsByUserId called with userId:', userId);
-    return this.usersService.findOriginByUserId(userId); // Llama a la función del servicio
+    return this.usersService.findOriginByUserId(userId);
   }
 }

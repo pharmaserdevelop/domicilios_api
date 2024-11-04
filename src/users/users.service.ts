@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  Get,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -10,14 +9,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Role } from 'src/roles/entities/role.entity';
 import { JwtService } from '@nestjs/jwt';
-import { createQueryBuilder, In, Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { JwtPayload } from 'src/auth/interfaces/jwt-payload.interface';
 import { OriginService } from 'src/origin/origin.service';
 import { UserOrigin } from 'src/user-origin/entities/user-origin.entity';
-import { find, map } from 'rxjs';
 import { Origin } from 'src/origin/entities/origin.entity';
-import { log } from 'console';
+import { Address } from 'cluster';
 
 @Injectable()
 export class UsersService {
@@ -141,7 +139,7 @@ export class UsersService {
     }
 
     try {
-      const users = await this.userRepository
+      const usersWithOrigin = await this.userRepository
         .createQueryBuilder('user')
         .innerJoinAndSelect(
           UserOrigin,
@@ -151,8 +149,20 @@ export class UsersService {
         .where('userOrigin.origin.id = :originId', { originId })
         .getMany();
 
-      console.log('Users found:', users);
-      return users;
+      const usersWithoutOrigin = await this.userRepository
+        .createQueryBuilder('user')
+        .leftJoinAndSelect(
+          UserOrigin,
+          'userOrigin',
+          'user.id = userOrigin.user.id',
+        )
+        .where('userOrigin.origin.id IS NULL')
+        .getMany();
+
+      const combinedUsers = [...usersWithOrigin, ...usersWithoutOrigin];
+
+      console.log('Users found:', combinedUsers);
+      return combinedUsers;
     } catch (error) {
       console.error('Error querying users:', error);
       throw new InternalServerErrorException('Error querying users');
@@ -162,7 +172,6 @@ export class UsersService {
   async findOriginByUserId(userId: string): Promise<Origin[]> {
     console.log('Finding origins for user with ID:', userId);
 
-    // Verifica si el usuario existe
     const user = await this.userRepository.findOne({ where: { id: userId } });
 
     if (!user) {
@@ -170,13 +179,11 @@ export class UsersService {
     }
 
     try {
-      // Realiza la consulta para obtener los orígenes asociados al usuario
       const userOrigins = await this.userOriginRepository.find({
         where: { user: { id: userId } },
-        relations: ['origin'], // Asegúrate de incluir la relación con Origin
+        relations: ['origin'],
       });
 
-      // Extrae los orígenes de las relaciones
       const origins = userOrigins.map((userOrigin) => userOrigin.origin);
 
       console.log('Origins found:', origins);

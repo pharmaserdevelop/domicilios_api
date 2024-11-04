@@ -59,4 +59,9 @@ export class AddressessController {
       updateAddressesDto,
     );
   }
+
+  @Get('users/:userId/addresses')
+  async getUserAddresses(@Param('userId') userId: string) {
+    return this.addressesService.findAddressesByUserId(userId);
+  }
 }

@@ -17,6 +17,7 @@ import * as SFTPClient from 'ssh2-sftp-client';
 import { UpdateDebtDto } from 'src/debts/dto/update-debt.dto';
 import * as fs from 'fs';
 import * as path from 'path';
+import { UpdateAddressesDto } from 'src/addresses/dto/update-addresses.dto';
 @Controller('requests')
 export class RequestsController {
   private sftp: SFTPClient;
@@ -35,7 +36,13 @@ export class RequestsController {
     if (!file) {
       return { message: 'No se recibió ningún archivo' };
     }
-    return this.requestsService.handleSignatureUpload(file, addressId);
+    const updateAddressesDto = new UpdateAddressesDto();
+    updateAddressesDto.state_name = 'entregado';
+    return this.requestsService.handleSignatureUpload(
+      file,
+      addressId,
+      updateAddressesDto,
+    );
   }
 
   @Post('upload/support')
@@ -47,7 +54,13 @@ export class RequestsController {
     if (!file) {
       return { message: 'No se recibió ningún archivo' };
     }
-    return this.requestsService.handleSupportUpload(file, addressId);
+    const updateAddressesDto = new UpdateAddressesDto();
+    updateAddressesDto.state_name = 'entregado';
+    return this.requestsService.handleSupportUpload(
+      file,
+      addressId,
+      updateAddressesDto,
+    );
   }
 
   @Post('upload/payment-support')
@@ -63,7 +76,6 @@ export class RequestsController {
     const updateDebtDto = new UpdateDebtDto();
     updateDebtDto.state_debt = 'saldada';
 
-    // Llamada al método para manejar la carga y actualización
     return this.requestsService.handlePaymentSupportUpload(
       file,
       debtIds,
