@@ -18,7 +18,7 @@ import { Origin } from 'src/origin/entities/origin.entity';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Auth('admin')
+  @Auth('')
   @Post('admin')
   @ApiOperation({ summary: 'Create a new admin user' })
   @ApiResponse({
@@ -29,6 +29,7 @@ export class UsersController {
   async createAdmin(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto, 'admin');
   }
+
   @Post('domiciliario')
   @ApiOperation({ summary: 'Create a new domiciliary user' })
   @ApiResponse({
@@ -42,20 +43,46 @@ export class UsersController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Search all users' })
+  @ApiResponse({
+    status: 201,
+    description: 'users were found.',
+  })
+  @ApiResponse({ status: 400, description: 'Users not found.' })
   async findAll() {
     return this.usersService.findAll();
   }
+
   @Get('findAllUsersDelivery')
+  @ApiOperation({ summary: 'Search all deliverys' })
+  @ApiResponse({
+    status: 201,
+    description: 'deliverys were found.',
+  })
+  @ApiResponse({ status: 400, description: 'Deliverys not found.' })
   async findAllUsersDelivery() {
     return this.usersService.findAllUsersDelivery();
   }
 
   @Get('finduser/:id')
-  findOneUser(id: string) {
+  @ApiOperation({ summary: 'Search a users' })
+  @ApiResponse({
+    status: 201,
+    description: 'user were found.',
+  })
+  @ApiResponse({ status: 400, description: 'User not found.' })
+  findOneUser(@Param('id') id: string) {
+    console.log('user');
     return this.usersService.findOne(id);
   }
 
   @Post(':userId/assign-origin')
+  @ApiOperation({ summary: 'Assign a user to a origin' })
+  @ApiResponse({
+    status: 201,
+    description: 'User successfully assigned',
+  })
+  @ApiResponse({ status: 400, description: 'Bad Request. Invalid  data.' })
   async assignOriginToUser(
     @Param('userId') userId: string,
     @Body('originId') originId: string,
@@ -70,18 +97,28 @@ export class UsersController {
   }
 
   @Get('by-origin/:originId')
+  @ApiOperation({ summary: 'List users of an origin' })
+  @ApiResponse({
+    status: 201,
+    description: 'User successfully found',
+  })
+  @ApiResponse({ status: 400, description: 'users not found' })
   async getUsersByOrigin(@Param('originId') originId: string): Promise<User[]> {
     try {
       return await this.usersService.findUsersByOrigin(originId);
     } catch (error) {
-      console.error('Error in getUsersByOrigin:', error);
       throw new InternalServerErrorException('Something went wrong');
     }
   }
 
   @Get(':id/origins')
+  @ApiOperation({ summary: 'Search the origins of a user' })
+  @ApiResponse({
+    status: 201,
+    description: 'Origins successfully found',
+  })
+  @ApiResponse({ status: 400, description: 'origins not found' })
   async getOriginsByUserId(@Param('id') userId: string): Promise<Origin[]> {
-    console.log('getOriginsByUserId called with userId:', userId);
     return this.usersService.findOriginByUserId(userId);
   }
 }

@@ -77,7 +77,7 @@ export class DebtsService {
 
   private async fetchAllDebts(): Promise<Debt[]> {
     return await this.debtRepository.find({
-      relations: ['address', 'address.state', 'state_debt'],
+      relations: ['address', 'address.state', 'state_debt', 'paymentSupports'],
     });
   }
 
@@ -98,7 +98,7 @@ export class DebtsService {
   private async fetchDebtWithRelations(debtId: string): Promise<Debt | null> {
     return await this.debtRepository.findOne({
       where: { id: debtId },
-      relations: ['address', 'address.state'],
+      relations: ['address', 'address.state', 'paymentSupports'],
     });
   }
 
@@ -165,7 +165,12 @@ export class DebtsService {
     try {
       const debts = await this.debtRepository.find({
         where: { deliveryPerson: { id: deliveryPersonId } },
-        relations: ['address', 'address.state', 'state_debt'],
+        relations: [
+          'address',
+          'address.state',
+          'state_debt',
+          'paymentSupports',
+        ],
       });
 
       if (!debts.length) {

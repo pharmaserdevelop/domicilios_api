@@ -15,7 +15,6 @@ import { JwtPayload } from 'src/auth/interfaces/jwt-payload.interface';
 import { OriginService } from 'src/origin/origin.service';
 import { UserOrigin } from 'src/user-origin/entities/user-origin.entity';
 import { Origin } from 'src/origin/entities/origin.entity';
-import { Address } from 'cluster';
 
 @Injectable()
 export class UsersService {
@@ -74,7 +73,7 @@ export class UsersService {
   }
 
   findAll() {
-    return this.userRepository.find();
+    return this.userRepository.find({ relations: ['roles'] });
   }
 
   async findAllUsersDelivery() {
@@ -93,20 +92,21 @@ export class UsersService {
   }
 
   async findOne(userId: string) {
-    const user = this.findAddressById(userId);
+    const user = await this.findAUser(userId);
     return user;
   }
 
-  private async findAddressById(userId: string): Promise<User> {
-    const addresses = await this.userRepository.findOne({
+  private async findAUser(userId: string): Promise<User> {
+    const user = await this.userRepository.findOne({
       where: { id: userId },
+      relations: ['roles'],
     });
 
-    if (!addresses) {
-      throw new NotFoundException(`Addresses with ID ${userId} not found`);
+    if (!user) {
+      throw new NotFoundException(`User with ID ${userId} not found`);
     }
 
-    return addresses;
+    return user;
   }
 
   async assignOriginToUser(
@@ -128,8 +128,6 @@ export class UsersService {
   }
 
   async findUsersByOrigin(originId: string): Promise<User[]> {
-    console.log('Checking for origin with ID:', originId);
-
     const origin = await this.originRepository.findOne({
       where: { id: originId },
     });
@@ -161,8 +159,15 @@ export class UsersService {
 
       const combinedUsers = [...usersWithOrigin, ...usersWithoutOrigin];
 
-      console.log('Users found:', combinedUsers);
-      return combinedUsers;
+      const userIds = combinedUsers.map((user) => user.id);
+      const usersWithRoles = await this.userRepository
+        .createQueryBuilder('user')
+        .leftJoinAndSelect('user.roles', 'role')
+        .where('user.id IN (:...userIds)', { userIds })
+        .getMany();
+
+      console.log('Users found:', usersWithRoles);
+      return usersWithRoles;
     } catch (error) {
       console.error('Error querying users:', error);
       throw new InternalServerErrorException('Error querying users');

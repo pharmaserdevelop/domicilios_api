@@ -18,6 +18,9 @@ import { UpdateDebtDto } from 'src/debts/dto/update-debt.dto';
 import * as fs from 'fs';
 import * as path from 'path';
 import { UpdateAddressesDto } from 'src/addresses/dto/update-addresses.dto';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+
+@ApiTags('requests')
 @Controller('requests')
 export class RequestsController {
   private sftp: SFTPClient;
@@ -27,7 +30,14 @@ export class RequestsController {
   ) {
     this.sftp = new SFTPClient();
   }
+
   @Post('upload/signature')
+  @ApiOperation({ summary: 'Upload a signature' })
+  @ApiResponse({
+    status: 201,
+    description: 'the signature has been successfully uploaded.',
+  })
+  @ApiResponse({ status: 400, description: 'Bad Request. Invalid  data.' })
   @UseInterceptors(FileInterceptor('file'))
   async uploadSignature(
     @UploadedFile() file: Express.Multer.File,
@@ -46,6 +56,12 @@ export class RequestsController {
   }
 
   @Post('upload/support')
+  @ApiOperation({ summary: 'Upload a support addresses' })
+  @ApiResponse({
+    status: 201,
+    description: 'the support has been successfully uploaded.',
+  })
+  @ApiResponse({ status: 400, description: 'Bad Request. Invalid data.' })
   @UseInterceptors(FileInterceptor('file'))
   async uploadSupport(
     @UploadedFile() file: Express.Multer.File,
@@ -64,6 +80,12 @@ export class RequestsController {
   }
 
   @Post('upload/payment-support')
+  @ApiOperation({ summary: 'Upload a support payment' })
+  @ApiResponse({
+    status: 201,
+    description: 'the support payment has been successfully uploaded.',
+  })
+  @ApiResponse({ status: 400, description: 'Bad Request. Invalid  data.' })
   @UseInterceptors(FileInterceptor('file'))
   async uploadPaymentSupport(
     @UploadedFile() file: Express.Multer.File,
@@ -84,6 +106,12 @@ export class RequestsController {
   }
 
   @Post('upload/image')
+  @ApiOperation({ summary: 'Upload an evidence' })
+  @ApiResponse({
+    status: 201,
+    description: 'the evidence has been successfully uploaded.',
+  })
+  @ApiResponse({ status: 400, description: 'Bad Request. Invalid  data.' })
   @UseInterceptors(FileInterceptor('file'))
   async uploadImage(
     @UploadedFile() file: Express.Multer.File,
@@ -96,6 +124,12 @@ export class RequestsController {
   }
 
   @Get('images/support/:filename')
+  @ApiOperation({ summary: 'Search a evidence' })
+  @ApiResponse({
+    status: 201,
+    description: 'Evidence has been successfully found.',
+  })
+  @ApiResponse({ status: 400, description: 'Bad Request. Invalid  data.' })
   async serveImage(@Param('filename') filename: string, @Res() res: Response) {
     const remotePath = this.configService.get<string>('SFTP_PATH');
     const filePath = path.join(remotePath, 'SoporteDom', filename);
@@ -138,6 +172,12 @@ export class RequestsController {
   }
 
   @Get('images/signature/:filename')
+  @ApiOperation({ summary: 'Search a signature' })
+  @ApiResponse({
+    status: 201,
+    description: 'Signature has been successfully found.',
+  })
+  @ApiResponse({ status: 400, description: 'Bad Request. Invalid  data.' })
   async serveImageSignature(
     @Param('filename') filename: string,
     @Res() res: Response,
@@ -183,6 +223,12 @@ export class RequestsController {
   }
 
   @Get('images/payment/:filename')
+  @ApiOperation({ summary: 'Search a payment support' })
+  @ApiResponse({
+    status: 201,
+    description: 'Payment support has been successfully found.',
+  })
+  @ApiResponse({ status: 400, description: 'Bad Request. Invalid  data.' })
   async serveImageSoporte(
     @Param('filename') filename: string,
     @Res() res: Response,
@@ -213,7 +259,6 @@ export class RequestsController {
           console.error('Error sending file:', err);
           return res.status(500).send('Error sending file');
         } else {
-          // Eliminar el archivo temporal después de enviarlo
           fs.unlink(tempPath, (unlinkErr) => {
             if (unlinkErr)
               console.error('Error deleting temporary file:', unlinkErr);

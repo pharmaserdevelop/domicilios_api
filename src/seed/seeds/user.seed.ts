@@ -27,6 +27,9 @@ export class UserSeed {
     const deliveryRole = await this.roleRepository.findOne({
       where: { name: 'domiciliario' },
     });
+    const superAdmin = await this.roleRepository.findOne({
+      where: { name: 'super-admin' },
+    });
 
     const users = [
       {
@@ -43,6 +46,14 @@ export class UserSeed {
         fullName: 'Domiciliario User',
         isActive: true,
         roles: [deliveryRole],
+        document: '1',
+      },
+      {
+        email: 'super@gmail.com',
+        password: bcrypt.hashSync('Abc1234#', 10),
+        fullName: 'Domiciliario User',
+        isActive: true,
+        roles: [superAdmin],
         document: '1',
       },
     ];

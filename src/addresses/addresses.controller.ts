@@ -61,6 +61,12 @@ export class AddressessController {
   }
 
   @Get('users/:userId/addresses')
+  @ApiOperation({ summary: 'consult the addresses of a user.' })
+  @ApiResponse({
+    status: 200,
+    description: 'The addresses of the user have been found.',
+  })
+  @ApiResponse({ status: 404, description: 'Address not found.' })
   async getUserAddresses(@Param('userId') userId: string) {
     return this.addressesService.findAddressesByUserId(userId);
   }
