@@ -33,7 +33,7 @@ import { UserOriginModule } from './user-origin/user-origin.module';
       password: process.env.DB_PASSWORD,
       entities: [`${__dirname}/**/*.entity{.ts,.js}`],
       synchronize: true,
-      logging: ['query', 'error'],
+      // logging: ['query', 'error'],
     }),
     RolesModule,
     UsersModule,
