@@ -5,12 +5,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { DeliveryReceivers } from './entities/delivery_receiver.entity';
 import { AddressessModule } from 'src/addresses/addresses.module';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
     ConfigModule,
     TypeOrmModule.forFeature([DeliveryReceivers]),
     forwardRef(() => AddressessModule),
+    AuthModule
   ],
   controllers: [DeliveryReceiverController],
   providers: [DeliveryReceiverService],

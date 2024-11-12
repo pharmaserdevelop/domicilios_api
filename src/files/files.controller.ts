@@ -3,12 +3,14 @@ import { FilesService } from './files.service';
 import { Response } from 'express';
 import * as fs from 'fs';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Auth } from 'src/auth/decorators/auth.decorater';
 
 @ApiTags('files')
 @Controller('files')
 export class FilesController {
   constructor(private readonly filesService: FilesService) {}
 
+  @Auth()
   @Get('preview/:filename')
   @ApiOperation({ summary: 'preview image of a file' })
   @ApiResponse({

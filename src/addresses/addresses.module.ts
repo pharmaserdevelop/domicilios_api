@@ -16,6 +16,7 @@ import { StateHistoryModule } from 'src/state_history/state_history.module';
 import { DeliveryReceiverModule } from 'src/delivery_receiver/delivery_receiver.module';
 import { Origin } from 'src/origin/entities/origin.entity';
 import { OriginModule } from 'src/origin/origin.module';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { OriginModule } from 'src/origin/origin.module';
     forwardRef(() => DebtsModule),
     forwardRef(() => DeliveryReceiverModule),
     OriginModule,
+    AuthModule
   ],
   controllers: [AddressessController],
   providers: [AddressessService],

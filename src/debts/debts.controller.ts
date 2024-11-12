@@ -11,12 +11,14 @@ import { DebtsService } from './debts.service';
 import { CreateDebtDto } from './dto/create-debt.dto';
 import { UpdateDebtDto } from './dto/update-debt.dto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Auth } from 'src/auth/decorators/auth.decorater';
 
 @ApiTags('debts')
 @Controller('debts')
 export class DebtsController {
   constructor(private readonly debtsService: DebtsService) {}
 
+  @Auth()
   @Post()
   @ApiOperation({ summary: 'Create a new debt' })
   @ApiResponse({
@@ -29,6 +31,7 @@ export class DebtsController {
     return this.debtsService.create(createDebtDto);
   }
 
+  @Auth()
   @Get()
   @ApiOperation({ summary: 'Retrieve all debts' })
   @ApiResponse({
@@ -40,6 +43,7 @@ export class DebtsController {
     return this.debtsService.findAllDebts();
   }
 
+  @Auth()
   @Get(':id')
   @ApiOperation({ summary: 'Retrieve a debt by ID' })
   @ApiResponse({
@@ -52,6 +56,7 @@ export class DebtsController {
     return this.debtsService.findDebtById(id);
   }
 
+  @Auth()
   @Patch(':id')
   @ApiOperation({ summary: 'Update the state of a debt' })
   @ApiResponse({
@@ -64,6 +69,7 @@ export class DebtsController {
     return this.debtsService.updateDebtsState(id, updateDebtDto);
   }
 
+  @Auth()
   @Delete(':id')
   @ApiOperation({ summary: 'Remove a debt by ID' })
   @ApiResponse({
@@ -75,6 +81,8 @@ export class DebtsController {
     return this.debtsService.remove(+id);
   }
 
+
+  @Auth()
   @Get('findDelivery/:id')
   @ApiOperation({ summary: 'Retrieve a debt by ID' })
   @ApiResponse({

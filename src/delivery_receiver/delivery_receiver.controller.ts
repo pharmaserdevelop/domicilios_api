@@ -12,6 +12,7 @@ import { CreateDeliveryReceiverDto } from './dto/create-delivery_receiver.dto';
 import { UpdateDeliveryReceiverDto } from './dto/update-delivery_receiver.dto';
 import { DeliveryReceivers } from './entities/delivery_receiver.entity';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Auth } from 'src/auth/decorators/auth.decorater';
 
 @ApiTags('delivery-receiver')
 @Controller('delivery-receiver')
@@ -20,6 +21,7 @@ export class DeliveryReceiverController {
     private readonly deliveryReceiverService: DeliveryReceiverService,
   ) {}
 
+  @Auth()
   @Post()
   @ApiOperation({ summary: 'Create a new delivery receiver' })
   @ApiResponse({
@@ -37,6 +39,7 @@ export class DeliveryReceiverController {
     return this.deliveryReceiverService.create(createReceiverDto);
   }
 
+  @Auth()
   @Get()
   @ApiOperation({ summary: 'Retrieve all delivery receivers' })
   @ApiResponse({
@@ -48,6 +51,7 @@ export class DeliveryReceiverController {
     return this.deliveryReceiverService.findAll();
   }
 
+  @Auth()
   @Get(':id')
   @ApiOperation({ summary: 'Retrieve a delivery receiver by ID' })
   @ApiResponse({
@@ -60,6 +64,7 @@ export class DeliveryReceiverController {
     return this.deliveryReceiverService.findOne(id);
   }
 
+  @Auth()
   @Patch(':id')
   @ApiOperation({ summary: 'Update a delivery receiver by ID' })
   @ApiResponse({
@@ -75,6 +80,7 @@ export class DeliveryReceiverController {
     return this.deliveryReceiverService.update(+id, updateDeliveryReceiverDto);
   }
 
+  @Auth()
   @Delete(':id')
   @ApiOperation({ summary: 'Remove a delivery receiver by ID' })
   @ApiResponse({

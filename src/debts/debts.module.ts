@@ -20,6 +20,7 @@ import { StateHistoryDebtsModule } from 'src/state_history_debts/state_history_d
     AuthModule,
     StateHistoryDebtsModule,
     forwardRef(() => AddressessModule),
+    AuthModule
   ],
   exports: [DebtsService],
 })

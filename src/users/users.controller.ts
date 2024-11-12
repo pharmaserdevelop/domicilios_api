@@ -18,7 +18,6 @@ import { Origin } from 'src/origin/entities/origin.entity';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Auth('')
   @Post('admin')
   @ApiOperation({ summary: 'Create a new admin user' })
   @ApiResponse({
@@ -42,6 +41,7 @@ export class UsersController {
     return this.usersService.create(createUserDto, 'domiciliario');
   }
 
+  @Auth()
   @Get()
   @ApiOperation({ summary: 'Search all users' })
   @ApiResponse({
@@ -53,6 +53,7 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  @Auth()
   @Get('findAllUsersDelivery')
   @ApiOperation({ summary: 'Search all deliverys' })
   @ApiResponse({
@@ -64,6 +65,7 @@ export class UsersController {
     return this.usersService.findAllUsersDelivery();
   }
 
+  @Auth()
   @Get('finduser/:id')
   @ApiOperation({ summary: 'Search a users' })
   @ApiResponse({
@@ -76,6 +78,7 @@ export class UsersController {
     return this.usersService.findOne(id);
   }
 
+  @Auth()
   @Post(':userId/assign-origin')
   @ApiOperation({ summary: 'Assign a user to a origin' })
   @ApiResponse({
@@ -96,6 +99,7 @@ export class UsersController {
     return user;
   }
 
+  @Auth()
   @Get('by-origin/:originId')
   @ApiOperation({ summary: 'List users of an origin' })
   @ApiResponse({
@@ -111,6 +115,7 @@ export class UsersController {
     }
   }
 
+  @Auth()
   @Get(':id/origins')
   @ApiOperation({ summary: 'Search the origins of a user' })
   @ApiResponse({

@@ -15,6 +15,7 @@ import { JwtPayload } from 'src/auth/interfaces/jwt-payload.interface';
 import { OriginService } from 'src/origin/origin.service';
 import { UserOrigin } from 'src/user-origin/entities/user-origin.entity';
 import { Origin } from 'src/origin/entities/origin.entity';
+import { ValidationService } from 'src/validation/validation.service';
 
 @Injectable()
 export class UsersService {
@@ -29,6 +30,7 @@ export class UsersService {
     private readonly userOriginRepository: Repository<UserOrigin>,
     @InjectRepository(Origin)
     private originRepository: Repository<Origin>,
+    private readonly validationService : ValidationService 
   ) {}
   async create(createUserDto: CreateUserDto, role?: string) {
     try {
@@ -36,8 +38,8 @@ export class UsersService {
 
       const userRoles = await this.roleRepository.find({
         where: {
-          name: In(roles && roles.length > 0 ? roles : ['domiciliario']),
-        },
+          name: In(role ? [role] : ['domiciliario']), 
+       },
       });
 
       const user = this.userRepository.create({
@@ -49,23 +51,13 @@ export class UsersService {
       await this.userRepository.save(user);
       delete user.password;
 
-      //  return {
-      //    ...user,
-      //    token: this.getJwtToken({ id: user.id, email: user.email }),
-      //  };
       return { token: this.getJwtToken({ id: user.id }) };
     } catch (error) {
-      this.handleDBrrors(error);
+      await this.validationService.handleDBrrors(error);
     }
   }
 
-  private handleDBrrors(error: any) {
-    if (error.errno === 1062) {
-      throw new BadRequestException(error.sqlMessage);
-      console.log(error);
-      throw new InternalServerErrorException('Please check server error');
-    }
-  }
+
 
   private getJwtToken(payload: JwtPayload) {
     const token = this.jwtService.sign(payload);
@@ -87,7 +79,7 @@ export class UsersService {
 
       return users;
     } catch (error) {
-      this.handleDBrrors(error);
+      this.validationService.handleDBrrors(error);
     }
   }
 

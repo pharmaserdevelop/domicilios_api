@@ -5,9 +5,10 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Origin } from './entities/origin.entity';
 import { Addresses } from 'src/addresses/entities/addresse.entity';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [ConfigModule, TypeOrmModule.forFeature([Origin, Addresses])],
+  imports: [ConfigModule, TypeOrmModule.forFeature([Origin, Addresses]), AuthModule],
   controllers: [OriginController],
   providers: [OriginService],
   exports: [OriginService],

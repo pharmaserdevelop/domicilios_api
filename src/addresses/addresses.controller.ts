@@ -3,12 +3,14 @@ import { CreateAddressesDto } from './dto/create-addresses.dto';
 import { AddressessService } from './addresses.service';
 import { UpdateAddressesDto } from './dto/update-addresses.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Auth } from 'src/auth/decorators/auth.decorater';
 
 @ApiTags('addresses')
 @Controller('addresses')
 export class AddressessController {
   constructor(private readonly addressesService: AddressessService) {}
 
+  @Auth()
   @Post('create')
   @ApiOperation({ summary: 'Create a new address' })
   @ApiResponse({
@@ -20,6 +22,7 @@ export class AddressessController {
     return this.addressesService.create(createAddressesDto);
   }
 
+  @Auth()
   @Get()
   @ApiOperation({ summary: 'Retrieve all addresses' })
   @ApiResponse({
@@ -31,6 +34,8 @@ export class AddressessController {
     return this.addressesService.findAll();
   }
 
+
+  @Auth()
   @Get(':id')
   @ApiOperation({ summary: 'Retrieve an address by ID' })
   @ApiResponse({
@@ -42,6 +47,7 @@ export class AddressessController {
     return this.addressesService.findOne(id);
   }
 
+  @Auth()
   @Put(':id/state')
   @ApiOperation({ summary: 'Update the state of an address' })
   @ApiResponse({
@@ -60,6 +66,7 @@ export class AddressessController {
     );
   }
 
+  @Auth()
   @Get('users/:userId/addresses')
   @ApiOperation({ summary: 'consult the addresses of a user.' })
   @ApiResponse({
