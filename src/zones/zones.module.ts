@@ -5,9 +5,10 @@ import { ConfigModule } from '@nestjs/config';
 import { Zone } from './entities/zone.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ValidationModule } from 'src/validation/validation.module';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [ConfigModule, TypeOrmModule.forFeature([Zone]), ValidationModule],
+  imports: [ConfigModule, TypeOrmModule.forFeature([Zone]), ValidationModule, AuthModule],
   controllers: [ZonesController],
   providers: [ZonesService],
   exports: [ZonesService],

@@ -2,6 +2,7 @@ import { Controller, Post, Body } from '@nestjs/common';
 import { CreateStatusAddressesDto } from './dto/create-status-addresses.dto';
 import { StatusAddressesService } from './status-addresses.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Auth } from 'src/auth/decorators/auth.decorater';
 
 @ApiTags('status-addresses')
 @Controller('status-addresses')
@@ -10,6 +11,7 @@ export class StatusAddressesController {
     private readonly estadosAddressessService: StatusAddressesService,
   ) {}
 
+  @Auth()
   @Post('create')
   @ApiOperation({ summary: 'Create a new status address' })
   @ApiResponse({

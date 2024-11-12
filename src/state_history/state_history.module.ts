@@ -5,9 +5,10 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { StateHistory } from './entities/state_history.entity';
 import { Addresses } from 'src/addresses/entities/addresse.entity';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [ConfigModule, TypeOrmModule.forFeature([StateHistory, Addresses])],
+  imports: [ConfigModule, TypeOrmModule.forFeature([StateHistory, Addresses]), AuthModule],
   controllers: [StateHistoryController],
   providers: [StateHistoryService],
   exports: [StateHistoryService],

@@ -11,6 +11,7 @@ import { StateHistoryDebtsService } from './state_history_debts.service';
 import { CreateStateHistoryDebtDto } from './dto/create-state_history_debt.dto';
 import { UpdateStateHistoryDebtDto } from './dto/update-state_history_debt.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Auth } from 'src/auth/decorators/auth.decorater';
 
 @ApiTags('state-history-debts')
 @Controller('state-history-debts')
@@ -19,6 +20,7 @@ export class StateHistoryDebtsController {
     private readonly stateHistoryDebtsService: StateHistoryDebtsService,
   ) {}
 
+  @Auth()
   @Post()
   @ApiOperation({ summary: 'Create a new state history debt' })
   @ApiResponse({
@@ -36,6 +38,7 @@ export class StateHistoryDebtsController {
     );
   }
 
+  @Auth()
   @Get()
   @ApiOperation({ summary: 'Retrieve all state history debts' })
   @ApiResponse({
@@ -47,6 +50,7 @@ export class StateHistoryDebtsController {
     return this.stateHistoryDebtsService.findAll();
   }
 
+  @Auth()
   @Get(':id')
   @ApiOperation({ summary: 'Retrieve a state history debt by ID' })
   @ApiResponse({
@@ -59,6 +63,7 @@ export class StateHistoryDebtsController {
     return this.stateHistoryDebtsService.findOne(+id);
   }
 
+  @Auth()
   @Patch(':id')
   @ApiOperation({ summary: 'Update a state history debt by ID' })
   @ApiResponse({
@@ -74,6 +79,7 @@ export class StateHistoryDebtsController {
     return this.stateHistoryDebtsService.update(+id, updateStateHistoryDebtDto);
   }
 
+  @Auth()
   @Delete(':id')
   @ApiOperation({ summary: 'Remove a state history debt by ID' })
   @ApiResponse({

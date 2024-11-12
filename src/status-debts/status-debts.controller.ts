@@ -11,11 +11,13 @@ import { StatusDebtsService } from './status-debts.service';
 import { CreateStatusDebtDto } from './dto/create-status-debt.dto';
 import { UpdateStatusDebtDto } from './dto/update-status-debt.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Auth } from 'src/auth/decorators/auth.decorater';
 @ApiTags('status-debts')
 @Controller('status-debts')
 export class StatusDebtsController {
   constructor(private readonly statusDebtsService: StatusDebtsService) {}
 
+  @Auth()
   @Post()
   @ApiOperation({ summary: 'Create a new status debt' })
   @ApiResponse({
@@ -31,6 +33,7 @@ export class StatusDebtsController {
     return this.statusDebtsService.create(createStatusDebtDto);
   }
 
+  @Auth()
   @Get()
   @ApiOperation({ summary: 'Retrieve all status debts' })
   @ApiResponse({
@@ -42,6 +45,7 @@ export class StatusDebtsController {
     return this.statusDebtsService.findAll();
   }
 
+  @Auth()
   @Get(':id')
   @ApiOperation({ summary: 'Retrieve a status debt by ID' })
   @ApiResponse({
@@ -54,6 +58,7 @@ export class StatusDebtsController {
     return this.statusDebtsService.findOne(+id);
   }
 
+  @Auth()
   @Patch(':id')
   @ApiOperation({ summary: 'Update a status debt by ID' })
   @ApiResponse({
@@ -69,6 +74,7 @@ export class StatusDebtsController {
     return this.statusDebtsService.update(+id, updateStatusDebtDto);
   }
 
+  @Auth()
   @Delete(':id')
   @ApiOperation({ summary: 'Remove a status debt by ID' })
   @ApiResponse({

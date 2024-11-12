@@ -19,6 +19,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { UpdateAddressesDto } from 'src/addresses/dto/update-addresses.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Auth } from 'src/auth/decorators/auth.decorater';
 
 @ApiTags('requests')
 @Controller('requests')
@@ -31,6 +32,7 @@ export class RequestsController {
     this.sftp = new SFTPClient();
   }
 
+  @Auth()
   @Post('upload/signature')
   @ApiOperation({ summary: 'Upload a signature' })
   @ApiResponse({
@@ -55,6 +57,7 @@ export class RequestsController {
     );
   }
 
+  @Auth()
   @Post('upload/support')
   @ApiOperation({ summary: 'Upload a support addresses' })
   @ApiResponse({
@@ -79,6 +82,7 @@ export class RequestsController {
     );
   }
 
+  @Auth()
   @Post('upload/payment-support')
   @ApiOperation({ summary: 'Upload a support payment' })
   @ApiResponse({
@@ -105,6 +109,7 @@ export class RequestsController {
     );
   }
 
+  @Auth()
   @Post('upload/image')
   @ApiOperation({ summary: 'Upload an evidence' })
   @ApiResponse({
@@ -123,6 +128,7 @@ export class RequestsController {
     return this.requestsService.handleImageUpload(file, addressId);
   }
 
+  @Auth()
   @Get('images/support/:filename')
   @ApiOperation({ summary: 'Search a evidence' })
   @ApiResponse({
@@ -171,6 +177,7 @@ export class RequestsController {
     }
   }
 
+  @Auth()
   @Get('images/signature/:filename')
   @ApiOperation({ summary: 'Search a signature' })
   @ApiResponse({
@@ -222,6 +229,7 @@ export class RequestsController {
     }
   }
 
+  @Auth()
   @Get('images/payment/:filename')
   @ApiOperation({ summary: 'Search a payment support' })
   @ApiResponse({

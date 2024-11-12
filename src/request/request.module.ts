@@ -8,6 +8,7 @@ import { PaymentSupportModule } from 'src/payment-support/payment-support.module
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Debt } from 'src/debts/entities/debt.entity';
 import { PaymentSupport } from 'src/payment-support/entities/payment-support.entity';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   controllers: [RequestsController],
@@ -19,6 +20,7 @@ import { PaymentSupport } from 'src/payment-support/entities/payment-support.ent
     FilesModule,
     DebtsModule,
     PaymentSupportModule,
+    AuthModule
   ],
 })
 export class RequestModule {}

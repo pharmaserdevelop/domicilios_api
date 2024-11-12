@@ -2,11 +2,13 @@ import { Controller, Get, Param } from '@nestjs/common';
 import { StateHistoryService } from './state_history.service';
 import { StateHistory } from './entities/state_history.entity';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Auth } from 'src/auth/decorators/auth.decorater';
 @ApiTags('state-history')
 @Controller('state-history')
 export class StateHistoryController {
   constructor(private readonly stateHistoryService: StateHistoryService) {}
 
+  @Auth()
   @Get()
   @ApiOperation({ summary: 'Retrieve all state histories' })
   @ApiResponse({
@@ -18,6 +20,7 @@ export class StateHistoryController {
     return this.stateHistoryService.findAll();
   }
 
+  @Auth()
   @Get('address/:id')
   @ApiOperation({ summary: 'Retrieve state histories by address ID' })
   @ApiResponse({
