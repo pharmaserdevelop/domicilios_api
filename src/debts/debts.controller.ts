@@ -10,35 +10,88 @@ import {
 import { DebtsService } from './debts.service';
 import { CreateDebtDto } from './dto/create-debt.dto';
 import { UpdateDebtDto } from './dto/update-debt.dto';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Auth } from 'src/auth/decorators/auth.decorater';
 
+@ApiTags('debts')
 @Controller('debts')
 export class DebtsController {
   constructor(private readonly debtsService: DebtsService) {}
 
+  @Auth()
   @Post()
+  @ApiOperation({ summary: 'Create a new debt' })
+  @ApiResponse({
+    status: 201,
+    description: 'The debt has been successfully created.',
+    type: CreateDebtDto,
+  })
+  @ApiResponse({ status: 400, description: 'Bad Request. Invalid debt data.' })
   create(@Body() createDebtDto: CreateDebtDto) {
     return this.debtsService.create(createDebtDto);
   }
 
+  @Auth()
   @Get()
-  @Auth('domiciliario')
+  @ApiOperation({ summary: 'Retrieve all debts' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of all debts.',
+    type: [CreateDebtDto],
+  })
   findAll() {
-    return this.debtsService.findAll();
+    return this.debtsService.findAllDebts();
   }
 
+  @Auth()
   @Get(':id')
+  @ApiOperation({ summary: 'Retrieve a debt by ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'The found debt.',
+    type: CreateDebtDto,
+  })
+  @ApiResponse({ status: 404, description: 'Debt not found.' })
   findOne(@Param('id') id: string) {
-    return this.debtsService.findOne(+id);
+    return this.debtsService.findDebtById(id);
   }
 
+  @Auth()
   @Patch(':id')
+  @ApiOperation({ summary: 'Update the state of a debt' })
+  @ApiResponse({
+    status: 200,
+    description: 'The state of the debt has been successfully updated.',
+    type: UpdateDebtDto,
+  })
+  @ApiResponse({ status: 404, description: 'Debt not found.' })
   update(@Param('id') id: string, @Body() updateDebtDto: UpdateDebtDto) {
-    return this.debtsService.update(+id, updateDebtDto);
+    return this.debtsService.updateDebtsState(id, updateDebtDto);
   }
 
+  @Auth()
   @Delete(':id')
+  @ApiOperation({ summary: 'Remove a debt by ID' })
+  @ApiResponse({
+    status: 204,
+    description: 'The debt has been successfully removed.',
+  })
+  @ApiResponse({ status: 404, description: 'Debt not found.' })
   remove(@Param('id') id: string) {
     return this.debtsService.remove(+id);
+  }
+
+
+  @Auth()
+  @Get('findDelivery/:id')
+  @ApiOperation({ summary: 'Retrieve a debt by ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'The found debt.',
+    type: CreateDebtDto,
+  })
+  @ApiResponse({ status: 404, description: 'Debt not found.' })
+  findDelivery(@Param('id') id: string) {
+    return this.debtsService.findDebtsByDeliveryPersonId(id);
   }
 }

@@ -24,7 +24,6 @@ export class AuthService {
   async login(loginUserDto: LoginUserDto) {
     const { password, email } = loginUserDto;
 
-    //? busqueda inicial para verificar que el usuario exista
     const user = await this.userRepository.findOne({
       where: { email },
       select: { email: true, password: true, id: true },
@@ -37,9 +36,17 @@ export class AuthService {
     if (!bcrypt.compareSync(password, user.password)) {
       throw new UnauthorizedException('credentail are not valid password');
     }
+    const expiresIn = process.env.JWT_EXPIRES_IN;
+    const expiresInMinutes =
+      parseInt(expiresIn) * (expiresIn.endsWith('h') ? 60 : 1);
 
-    // return { ...user, token: this.getJwtToken({ id: user.id, email: user.email }) };
-    return { token: this.getJwtToken({ id: user.id, email: user.email }) };
+    return {
+      token: this.getJwtToken({
+        id: user.id,
+        // email: user.email,
+      }),
+      expiresIn: expiresInMinutes,
+    };
   }
 
   private getJwtToken(payload: JwtPayload) {

@@ -1,34 +1,31 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
 import { CreateStatusAddressesDto } from './dto/create-status-addresses.dto';
-import { UpdateStatusAddressesDto } from './dto/update-status-addresses.dto';
 import { StatusAddressesService } from './status-addresses.service';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Auth } from 'src/auth/decorators/auth.decorater';
 
-@Controller('estados-addresses')
+@ApiTags('status-addresses')
+@Controller('status-addresses')
 export class StatusAddressesController {
-  constructor(private readonly estadosAddressessService: StatusAddressesService) {}
+  constructor(
+    private readonly estadosAddressessService: StatusAddressesService,
+  ) {}
 
+  @Auth()
   @Post('create')
-  createEsatodosAddressess(@Body() createEstadosAddressesDto: CreateStatusAddressesDto) {
+  @ApiOperation({ summary: 'Create a new status address' })
+  @ApiResponse({
+    status: 201,
+    description: 'The status address has been successfully created.',
+    type: CreateStatusAddressesDto,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request. Invalid status address data.',
+  })
+  createEsatodosAddressess(
+    @Body() createEstadosAddressesDto: CreateStatusAddressesDto,
+  ) {
     return this.estadosAddressessService.create(createEstadosAddressesDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.estadosAddressessService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.estadosAddressessService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEstadosAddressesDto: UpdateStatusAddressesDto) {
-    return this.estadosAddressessService.update(+id, updateEstadosAddressesDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.estadosAddressessService.remove(+id);
   }
 }

@@ -1,35 +1,57 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateZoneDto } from './dto/create-zone.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Zona } from './entities/zone.entity';
+import { Zone } from './entities/zone.entity';
 import { Repository } from 'typeorm';
 import { ValidationService } from 'src/validation/validation.service';
 
 @Injectable()
-export class ZonasService {
+export class ZonesService {
   constructor(
-    @InjectRepository(Zona)
-    private readonly zonaRepository: Repository<Zona>,
+    @InjectRepository(Zone)
+    private readonly zoneRepository: Repository<Zone>,
     private readonly validationService: ValidationService,
   ) {}
-  async createZona(createZoneDto: CreateZoneDto) {
+  async createZone(createZoneDto: CreateZoneDto) {
     const { nameZone } = createZoneDto;
 
-    const existingZona = await this.zonaRepository.findOne({
+    const existingZone = await this.zoneRepository.findOne({
       where: { nameZone },
     });
 
-    if (existingZona) {
-      throw new BadRequestException(
-        `La zona con el nombre "${nameZone}" ya existe.`,
-      );
+    if (existingZone) {
+      throw new BadRequestException(`The  zone with name "${nameZone}" exist.`);
     }
-    const zona = this.zonaRepository.create(createZoneDto);
+    const zone = this.zoneRepository.create(createZoneDto);
     try {
-      await this.zonaRepository.save(zona);
-      return { nameZone: zona.nameZone, id: zona.id };
+      await this.zoneRepository.save(zone);
+      return { nameZone: zone.nameZone, id: zone.id };
     } catch (error) {
       this.validationService.handleDBrrors(error);
     }
+  }
+
+  async findOne(zonesId: string) {
+    const addresses = this.findZonesById(zonesId);
+    return addresses;
+  }
+  private async findZonesById(zonesId: string): Promise<Zone> {
+    const zone = await this.zoneRepository.findOne({
+      where: { id: zonesId },
+    });
+
+    if (!zone) {
+      throw new NotFoundException(`Addresses with ID ${zonesId} not found`);
+    }
+
+    return zone;
+  }
+
+  findAll() {
+    return this.zoneRepository.find();
   }
 }

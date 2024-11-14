@@ -1,11 +1,8 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 
-import { ZonasModule } from './zones/zones.module';
+import { ZonesModule } from './zones/zones.module';
 import { AddressessModule } from './addresses/addresses.module';
-import { RepartoModule } from './delivery/delivery.module';
 import { RolesModule } from './roles/roles.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -14,6 +11,15 @@ import { SeedModule } from './seed/seed.module';
 import { ValidationModule } from './validation/validation.module';
 import { DebtsModule } from './debts/debts.module';
 import { StatusAddressesModule } from './status-addresses/status-addresses.module';
+import { StateHistoryModule } from './state_history/state_history.module';
+import { DeliveryReceiverModule } from './delivery_receiver/delivery_receiver.module';
+import { StatusDebtsModule } from './status-debts/status-debts.module';
+import { StateHistoryDebtsModule } from './state_history_debts/state_history_debts.module';
+import { OriginModule } from './origin/origin.module';
+import { FilesModule } from './files/files.module';
+import { RequestModule } from './request/request.module';
+import { PaymentSupportModule } from './payment-support/payment-support.module';
+import { UserOriginModule } from './user-origin/user-origin.module';
 
 @Module({
   imports: [
@@ -27,19 +33,28 @@ import { StatusAddressesModule } from './status-addresses/status-addresses.modul
       password: process.env.DB_PASSWORD,
       entities: [`${__dirname}/**/*.entity{.ts,.js}`],
       synchronize: true,
+      // logging: ['query', 'error'],
     }),
     RolesModule,
     UsersModule,
     StatusAddressesModule,
-    ZonasModule,
+    ZonesModule,
     AddressessModule,
-    RepartoModule,
     DebtsModule,
     AuthModule,
     SeedModule,
     ValidationModule,
+    StateHistoryModule,
+    DeliveryReceiverModule,
+    StatusDebtsModule,
+    StateHistoryDebtsModule,
+    OriginModule,
+    FilesModule,
+    RequestModule,
+    PaymentSupportModule,
+    UserOriginModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

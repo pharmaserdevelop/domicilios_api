@@ -6,6 +6,7 @@ import { StatusAddresses } from './entities/status-addresses.entity';
 import { ValidationModule } from 'src/validation/validation.module';
 import { StatusAddressesController } from './status-addresses.controller';
 import { StatusAddressesService } from './status-addresses.service';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   controllers: [StatusAddressesController],
@@ -14,6 +15,7 @@ import { StatusAddressesService } from './status-addresses.service';
     ConfigModule,
     TypeOrmModule.forFeature([StatusAddresses]),
     ValidationModule,
+    AuthModule
   ],
   exports: [StatusAddressesService],
 })
