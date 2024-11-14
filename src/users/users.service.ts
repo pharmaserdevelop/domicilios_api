@@ -29,7 +29,7 @@ export class UsersService {
     @InjectRepository(UserOrigin)
     private readonly userOriginRepository: Repository<UserOrigin>,
     @InjectRepository(Origin)
-    private originRepository: Repository<Origin>,
+    private readonly originRepository: Repository<Origin>,
     private readonly validationService : ValidationService 
   ) {}
   async create(createUserDto: CreateUserDto, role?: string) {
@@ -38,8 +38,8 @@ export class UsersService {
 
       const userRoles = await this.roleRepository.find({
         where: {
-          name: In(role ? [role] : ['domiciliario']), 
-       },
+          name: In(role ? [role] : ['domiciliario']),
+        },
       });
 
       const user = this.userRepository.create({

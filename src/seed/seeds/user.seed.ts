@@ -30,10 +30,16 @@ export class UserSeed {
     const superAdmin = await this.roleRepository.findOne({
       where: { name: 'super-admin' },
     });
+    const operationRole = await this.roleRepository.findOne({
+      where: { name: 'operaciones' },
+    });
+    const financialRole = await this.roleRepository.findOne({
+      where: { name: 'financiero' },
+    });
 
     const users = [
       {
-        email: 'admin@gmail.com',
+        email: 'admin@pharmaser.com',
         password: bcrypt.hashSync('Abc1234#', 10),
         fullName: 'Admin User',
         isActive: true,
@@ -41,7 +47,7 @@ export class UserSeed {
         document: '1',
       },
       {
-        email: 'domiciliario@gmail.com',
+        email: 'domiciliario@pharmaser.com',
         password: bcrypt.hashSync('Abc1234#', 10),
         fullName: 'Domiciliario User',
         isActive: true,
@@ -49,11 +55,27 @@ export class UserSeed {
         document: '1',
       },
       {
-        email: 'super@gmail.com',
+        email: 'super@pharmaser.com',
         password: bcrypt.hashSync('Abc1234#', 10),
-        fullName: 'Domiciliario User',
+        fullName: 'Super User',
         isActive: true,
         roles: [superAdmin],
+        document: '1',
+      },
+      {
+        email: 'operaciones@pharmaser.com',
+        password: bcrypt.hashSync('Abc1234#', 10),
+        fullName: 'Operation User',
+        isActive: true,
+        roles: [operationRole],
+        document: '1',
+      },
+      {
+        email: 'financiero@pharmaser.com',
+        password: bcrypt.hashSync('Abc1234#', 10),
+        fullName: 'Financial User',
+        isActive: true,
+        roles: [financialRole],
         document: '1',
       },
     ];

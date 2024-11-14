@@ -21,6 +21,8 @@ export class RoleSeed {
       { name: 'admin' },
       { name: 'super-admin' },
       { name: 'domiciliario' },
+      { name: 'operaciones' },
+      { name: 'financiero' },
     ];
 
     await this.roleRepository.save(roles);

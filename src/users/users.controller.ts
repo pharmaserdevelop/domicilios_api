@@ -111,7 +111,7 @@ export class UsersController {
     try {
       return await this.usersService.findUsersByOrigin(originId);
     } catch (error) {
-      throw new InternalServerErrorException('Something went wrong');
+      throw new InternalServerErrorException('Something went wrong', error);
     }
   }
 
